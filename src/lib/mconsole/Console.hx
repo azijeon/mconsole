@@ -14,6 +14,8 @@ private typedef CallStack = haxe.Stack;
 private typedef StringMap<T> = Hash<T>;
 #end
 
+typedef IMap<K,V> = #if (haxe_ver < 4.0) Map.IMap<K,V> #else haxe.Constraints.IMap<K,V> #end;
+
 /**
 	This console implementation assumes the availability of the WebKit console. 
 	We inline calls to the native API rather than simply creating an extern so 
