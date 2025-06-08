@@ -473,8 +473,8 @@ class Console
 	**/
 	inline public static function enterDebugger()
 	{
-		#if js
-		untyped __js__("debugger");
+		#if js 
+			#if (haxe_ver >= 4) js.Syntax.code("debugger") #else untyped __js__("debugger")#end;
 		#elseif flash
 		flash.system.ApplicationDomain.currentDomain.getDefinition("flash.debugger::enterDebugger")();
 		#end
@@ -502,7 +502,7 @@ class Console
 		return false;
 		#elseif (js && !nodejs)
 		if (untyped console != null && console[dirxml] == null) dirxml = "log";
-		return untyped __js__("console != undefined && console.log != undefined && console.warn != undefined");
+		return #if (haxe_ver >= 4) js.Syntax.code(#else untyped __js__(#end"console != undefined && console.log != undefined && console.warn != undefined");
 		#elseif flash
 		return flash.external.ExternalInterface.available &&
 			flash.external.ExternalInterface.call("console.error.toString") != null;
@@ -520,7 +520,7 @@ class Console
 		#if (js && !nodejs)
 		if (untyped console[method] != null)
 		{
-			if (method == "log" && Std.is(params[0], Xml)) method = dirxml;
+			if (method == "log" && Std.isOfType(params[0], Xml)) method = dirxml;
 
 			if (untyped console[method].apply != null)
 				untyped console[method].apply(console, mconsole.Console.toConsoleValues(params));
@@ -558,7 +558,7 @@ class Console
 		if (typeName == "Xml")
 		{
 			#if js
-			var parser = untyped __js__("new DOMParser()");
+			var parser = #if (haxe_ver >= 4) js.Syntax.code( #else untyped __js__(#end "new DOMParser()");
 			return parser.parseFromString(value.toString(), "text/xml").firstChild;
 			#elseif flash
 			return {___xml___:true, xml:value.toString()};
